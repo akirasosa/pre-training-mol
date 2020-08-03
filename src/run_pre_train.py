@@ -15,7 +15,7 @@ from mylib.sklearn.split import KBinsStratifiedKFold
 from mylib.torch.data.dataset import PandasDataset
 
 
-class Net(PLBaseModule):
+class PLModule(PLBaseModule):
     def __init__(self, hparams: DictConfig):
         super().__init__()
         self.hparams = hparams
@@ -23,11 +23,6 @@ class Net(PLBaseModule):
             num_targets=3,
             return_hidden_outputs=True,
         )
-
-        if self.hp.ema_decay is not None:
-            self.ema_model = copy.deepcopy(self.model)
-            for p in self.ema_model.parameters():
-                p.requires_grad_(False)
 
     def setup(self, stage: str):
         df = pd.read_parquet(self.hp.db_path)
@@ -78,4 +73,4 @@ class Net(PLBaseModule):
 if __name__ == '__main__':
     configure_logging()
     params = Params.load()
-    train(Net, params)
+    train(PLModule, params)

@@ -1,3 +1,4 @@
+import copy
 import dataclasses
 from abc import ABC, abstractmethod
 from functools import cached_property
@@ -12,6 +13,7 @@ from typing import List
 import pandas as pd
 import pytorch_lightning as pl
 import torch
+import torch.nn as nn
 from pytorch_lightning import seed_everything
 from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.loggers import TensorBoardLogger
@@ -40,7 +42,15 @@ class PLBaseModule(pl.LightningModule, ABC):
         self.train_dataset: Optional[Dataset] = None
         self.val_dataset: Optional[Dataset] = None
         self.best: float = float('inf')
-        self.ema_model = None
+        self.ema_model: Optional[nn.Module] = None
+
+    def on_train_start(self) -> None:
+        super(PLBaseModule, self).on_train_start()
+        # Init ema model.
+        if self.hp.ema_decay is not None:
+            self.ema_model = copy.deepcopy(self.model)
+            for p in self.ema_model.parameters():
+                p.requires_grad_(False)
 
     def optimizer_step(
             self,
@@ -89,7 +99,7 @@ class PLBaseModule(pl.LightningModule, ABC):
 
     @abstractmethod
     def step(self, batch, prefix: str, model=None) -> Dict:
-        pass
+        raise NotImplemented()
 
     def training_epoch_end(self, outputs):
         metrics = self.__collect_metrics(outputs, 'train')

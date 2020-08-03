@@ -1,4 +1,3 @@
-import copy
 from collections import OrderedDict
 from typing import Dict, Optional
 
@@ -13,16 +12,11 @@ from mol.params import Params
 from mol.train_base import PLBaseModule, train
 
 
-class Net(PLBaseModule):
+class PLModule(PLBaseModule):
     def __init__(self, hparams: DictConfig):
         super().__init__()
         self.hparams = hparams
         self.model = dimenet(self.hparams.pretrained_ckpt_path)
-
-        if self.hp.ema_decay is not None:
-            self.ema_model = copy.deepcopy(self.model)
-            for p in self.ema_model.parameters():
-                p.requires_grad_(False)
 
     def step(self, batch, prefix: str, model=None) -> Dict:
         batch = AtomsBatch(**batch)
@@ -72,4 +66,4 @@ def dimenet(ckpt_path: Optional[str]) -> DimeNet:
 if __name__ == '__main__':
     configure_logging()
     params = Params.load()
-    train(Net, params)
+    train(PLModule, params)
