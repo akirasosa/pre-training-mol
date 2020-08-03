@@ -1,6 +1,6 @@
 # Applying self pre-training method to GNN for quantum chemistry
 
-This repository contains some experiments for [*Applying self pre-training method to GNN for quantum chemistry*](https://medium.com/p/7933e4e40a6).
+This repository contains some experiments for [*Applying self pre-training method to GNN for quantum chemistry*](https://medium.com/vitalify-asia/applying-self-pre-training-method-to-gnn-for-quantum-chemistry-7933e4e40a6?sk=0a2a9b114cbeb524679a54cc3ab63527).
 
 ## Prerequisites
 
