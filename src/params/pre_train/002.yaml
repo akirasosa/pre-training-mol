@@ -1,0 +1,19 @@
+note: 'Train all with radam lr=3e-4'
+
+module_params:
+  optim: radam
+  lr: 3e-4
+  weight_decay: 1e-4
+  batch_size: 32
+  rand_cov: 0.02
+  ema_decay: 0.9999
+  ema_eval_freq: 1
+  fold: 0
+  n_splits: null
+  seed: 0
+
+trainer_params:
+  epochs: 200
+  gpus: [0]
+  num_tpu_cores: null
+  use_16bit: false
